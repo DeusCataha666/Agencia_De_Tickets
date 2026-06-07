@@ -1,0 +1,88 @@
+@extends('layouts.app')
+
+@section('title','Ver Cliente')
+
+@section('content')
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid"></div>
+    </section>
+    @include('layouts.partial.msg')
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-secondary" style="font-size:1.75rem;font-weight:500;line-height:1.2;margin-bottom:0.5rem;">
+                            @yield('title') #{{ $cliente->id }}
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Nombre</label>
+                                        <p>{{ $cliente->nombre }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Estado</label>
+                                        <p>
+                                            <span class="badge {{ $cliente->estado ? 'badge-success' : 'badge-danger' }}">
+                                                {{ $cliente->estado ? 'Activo' : 'Inactivo' }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Dirección</label>
+                                        <p>{{ $cliente->direccion ?? 'N/A' }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Teléfono</label>
+                                        <p>{{ $cliente->telefono ?? 'N/A' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if($cliente->tickets->count())
+                            <hr>
+                            <h5>Tickets asociados ({{ $cliente->tickets->count() }})</h5>
+                            <div class="row">
+                                @foreach($cliente->tickets as $ticket)
+                                <div class="col-lg-12">
+                                    <div class="card card-outline card-info mb-2">
+                                        <div class="card-body py-2">
+                                            <strong>{{ $ticket->titulo }}</strong>
+                                            <span class="text-muted float-right">{{ $ticket->fecha_creacion }}</span>
+                                            <p class="mb-0 mt-1">{{ \Illuminate\Support\Str::limit($ticket->descripcion, 100) }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            @endif
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-lg-2 col-xs-4">
+                                    <a href="{{ route('clientes.viewPdf', $cliente->id) }}" target="_blank" class="btn btn-danger btn-block btn-flat"><i class="fas fa-eye"></i> Ver PDF</a>
+                                </div>
+                                <div class="col-lg-2 col-xs-4 width-min-100">
+                                    <a href="{{ route('clientes.exportPdf', $cliente->id) }}" class="btn btn-danger btn-block btn-flat"><i class="fas fa-download"></i> Descargar PDF</a>
+                                </div>
+                                <div class="col-lg-2 col-xs-4">
+                                    <a href="{{ route('clientes.index') }}" class="btn btn-secondary btn-block btn-flat">Atrás</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+@endsection
