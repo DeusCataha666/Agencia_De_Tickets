@@ -24,7 +24,7 @@ auth.json
 # Archivos generados por Laravel
 /public/storage
 /public/hot
-/public/build
+#/public/build
 /storage/*.key
 /storage/pail
 *.log
