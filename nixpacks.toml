@@ -1,2 +1,5 @@
+[phases.build]
+cmds = ["composer install --no-dev --optimize-autoloader", "npm install && npm run build"]
+
 [start]
-cmd = "vendor/bin/heroku-php-apache2 public/"
+cmd = "vendor/bin/heroku-php-nginx public/"
