@@ -1,5 +1,8 @@
+[phases.setup]
+nixPkgs = ["...", "php82"] # Asegura que PHP esté disponible
+
 [phases.build]
-cmds = ["composer install --no-dev --optimize-autoloader", "npm install && npm run build"]
+cmds = ["composer install --no-dev --optimize-autoloader"]
 
 [start]
-cmd = "vendor/bin/heroku-php-nginx public/"
+cmd = "php -S 0.0.0.0:$PORT -t public"
