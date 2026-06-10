@@ -1,51 +1,29 @@
 FROM php:8.2-cli
 
-# Dependencias del sistema
+# Instalar dependencias del sistema y extensiones de PHP necesarias para MySQL
 RUN apt-get update && apt-get install -y \
+    git \
+    curl \
     libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libzip-dev \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip \
-    git \
-    curl
+    unzip
 
-# Extensiones PHP (Tus mismas extensiones para que Laravel funcione perfecto)
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install \
-        gd \
-        pdo \
-        pdo_mysql \
-        zip \
-        mbstring \
-        exif \
-        bcmath \
-        xml
+RUN docker-php-ext-install pdo_mysql mbstring
 
-# Instalar Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Traer Composer de forma directa
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Configurar el directorio de trabajo dentro del contenedor
 WORKDIR /var/www/html
-
-# Copiar archivos de dependencias para aprovechar la caché de Docker
-COPY composer.json composer.lock ./
-
-RUN composer install \
-    --no-interaction \
-    --no-dev \
-    --optimize-autoloader \
-    --no-scripts
-
-# Copiar el resto de tu proyecto de Laravel
 COPY . .
 
-# Configurar permisos correctos para Laravel
-RUN mkdir -p storage/logs bootstrap/cache && \
-    chown -R www-data:www-data storage bootstrap/cache && \
-    chmod -R 775 storage bootstrap/cache
+# Instalar dependencias de Laravel sin las de desarrollo
+RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-# 🚀 COMANDO MAESTRO: Arranca el servidor nativo de PHP usando el puerto dinámico de Railway
-CMD ["sh", "-c", "php -S 0.0.0.0:${PORT} -t public"]
+# Dar permisos correctos a las carpetas de almacenamiento de Laravel
+RUN chmod -R 775 storage bootstrap/cache
+
+# Comando de arranque usando el puerto dinámico de Railway
+CMD php artisan serve --host=0.0.0.0 --port=${PORT}
