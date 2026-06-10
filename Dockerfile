@@ -25,11 +25,9 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
         bcmath \
         xml
 
-# Verificación (para depurar)
-RUN php -m | grep zip
-
-# Apache
-RUN a2enmod rewrite
+# 🛠️ FIX 1: Desactivar MPM conflictivos y asegurar mpm_prefork (Evita el bucle de errores)
+RUN a2dismod mpm_event mpm_worker || true && \
+    a2enmod mpm_prefork rewrite
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
@@ -39,6 +37,10 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
     /etc/apache2/apache2.conf \
     /etc/apache2/conf-available/*.conf
+
+# 🛠️ FIX 2: Configurar Apache para escuchar el puerto dinámico de Railway ($PORT) en lugar del 80
+RUN sed -i 's/Listen 80/Listen ${PORT}/g' /etc/apache2/ports.conf
+RUN sed -i 's/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/g' /etc/apache2/sites-available/000-default.conf
 
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -62,6 +64,5 @@ RUN mkdir -p storage/logs bootstrap/cache && \
     chown -R www-data:www-data storage bootstrap/cache && \
     chmod -R 775 storage bootstrap/cache
 
-EXPOSE 80
-
+# Nota: Quitamos el EXPOSE 80 ya que Railway maneja el puerto mediante la variable integrada $PORT
 CMD ["apache2-foreground"]
