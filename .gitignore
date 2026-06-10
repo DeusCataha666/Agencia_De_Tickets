@@ -1,24 +1,30 @@
-*.log
-.DS_Store
+/node_modules
+/vendor
+/.phpunit.cache
+.phpunit.result.cache
+
+# Variables de entorno (¡Muy importante que se queden ignoradas!)
 .env
 .env.backup
 .env.production
-.phpactor.json
-.phpunit.result.cache
-/.fleet
+.env.testing
+
+# Archivos del sistema y de editores de código
+Thumbs.db
+.DS_Store
 /.idea
-/.nova
-/.phpunit.cache
 /.vscode
+/.fleet
+/.nova
 /.zed
-/auth.json
-/node_modules
-/public/build
-/public/hot
-/public/storage
-/storage/*.key
-/storage/pail
-/vendor
 Homestead.json
 Homestead.yaml
-Thumbs.db
+auth.json
+
+# Archivos generados por Laravel
+/public/storage
+/public/hot
+/public/build
+/storage/*.key
+/storage/pail
+*.log
