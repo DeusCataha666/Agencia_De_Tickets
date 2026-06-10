@@ -1,0 +1,153 @@
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+ 
+        body {
+            background: #0e0808;
+            font-family: 'Sora', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+ 
+        /* ── Background ── */
+        .hazard {
+            position: fixed; inset: 0;
+            background: repeating-linear-gradient(
+                -45deg,
+                transparent, transparent 18px,
+                rgba(180,0,0,.06) 18px, rgba(180,0,0,.06) 19px
+            );
+            pointer-events: none;
+        }
+        .radial {
+            position: fixed; inset: 0;
+            background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(240,64,64,.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .alert-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 3px; background: #f04040;
+            animation: a-pulse 1.5s ease-in-out infinite;
+        }
+        .alert-bar-b {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 3px; background: #f04040;
+            animation: a-pulse 1.5s ease-in-out infinite .75s;
+        }
+        @keyframes a-pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
+ 
+        /* ── Card ── */
+        .doc-card {
+            position: relative; z-index: 10;
+            background: #120000;
+            border: 1px solid rgba(240,64,64,.18);
+            border-radius: 4px;
+            padding: 32px 36px 28px;
+            max-width: 420px; width: 90%;
+            text-align: center;
+        }
+ 
+        /* ── Stamp ── */
+        .stamp-wrap { position: absolute; top: 18px; right: 18px; transform: rotate(-12deg); }
+        .stamp {
+            border: 3px solid #f04040;
+            border-radius: 4px;
+            padding: 4px 8px;
+            opacity: .9;
+            animation: st-flicker 4s ease-in-out infinite;
+        }
+        @keyframes st-flicker { 0%,85%,100%{opacity:.9} 90%{opacity:.5} }
+        .stamp span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem; font-weight: 700;
+            color: #f04040; letter-spacing: 2px;
+            display: block; line-height: 1.4;
+        }
+ 
+        /* ── Eye ── */
+        .eye-wrap { width: 60px; height: 36px; margin: 0 auto 16px; }
+        .eye-outer {
+            width: 60px; height: 36px;
+            border: 2px solid #f04040;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            animation: blink-eye 5s ease-in-out infinite;
+        }
+        @keyframes blink-eye { 0%,88%,100%{transform:scaleY(1)} 94%{transform:scaleY(.07)} }
+        .eye-pupil {
+            width: 16px; height: 16px;
+            background: radial-gradient(circle at 35% 35%, #ff6060, #c01010);
+            border-radius: 50%;
+            animation: look 5s ease-in-out infinite;
+        }
+        @keyframes look { 0%,100%{transform:translateX(0)} 30%{transform:translateX(10px)} 70%{transform:translateX(-8px)} }
+ 
+        /* ── Error code ── */
+        .err-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(5.5rem, 18vw, 9rem);
+            font-weight: 700;
+            color: #f04040;
+            letter-spacing: -3px; line-height: 1;
+            text-shadow: 0 0 60px rgba(240,64,64,.35);
+            animation: shake 8s ease-in-out infinite;
+        }
+        @keyframes shake {
+            0%,88%,100%{transform:translateX(0)}
+            90%{transform:translateX(-3px)} 92%{transform:translateX(3px)}
+            94%{transform:translateX(-2px)} 96%{transform:translateX(2px)}
+        }
+ 
+        .badge {
+            display: inline-block;
+            background: rgba(240,64,64,.10);
+            border: 1px solid rgba(240,64,64,.3);
+            color: #f04040;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .68rem; letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 5px 14px; border-radius: 2px;
+            margin-bottom: 1.2rem;
+        }
+        h1 { font-size: clamp(1rem,3.5vw,1.45rem); font-weight:700; color:#f4e8e8; margin-bottom:.7rem; }
+        p  { font-size:.92rem; color:#6e3030; line-height:1.75; margin-bottom:1.5rem; }
+ 
+        /* ── Redacted lines ── */
+        .doc-lines { display:flex; flex-direction:column; gap:6px; margin:0 0 1.8rem; }
+        .doc-line   { height:7px; background:#1e0606; border-radius:2px; }
+        .doc-line.short { width:60%; }
+        .doc-line.classified {
+            background: rgba(240,64,64,.12);
+            border: 1px solid rgba(240,64,64,.2);
+            position: relative;
+        }
+        .doc-line.classified::after {
+            content: '[REDACTADO]';
+            position: absolute; top:50%; left:8px;
+            transform: translateY(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .52rem; color: rgba(240,64,64,.4);
+            letter-spacing: 2px;
+        }
+ 
+        /* ── Buttons ── */
+        .actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+        .btn-p {
+            background:#f04040; color:#0e0808;
+            font-family:'Sora',sans-serif; font-size:.85rem; font-weight:700;
+            padding:12px 28px; border:none; border-radius:3px;
+            text-decoration:none; letter-spacing:.5px;
+            transition:transform .15s,box-shadow .15s; cursor:pointer; display:inline-block;
+        }
+        .btn-p:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(240,64,64,.35); }
+        .btn-g {
+            background:transparent; color:#6e3030;
+            font-family:'Sora',sans-serif; font-size:.85rem;
+            padding:12px 28px; border:1px solid rgba(110,48,48,.4); border-radius:3px;
+            text-decoration:none; letter-spacing:.5px;
+            transition:color .15s,border-color .15s; cursor:pointer; display:inline-block;
+        }
+        .btn-g:hover { color:#f04040; border-color:rgba(240,64,64,.4); }
