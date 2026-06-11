@@ -1,20 +1,12 @@
-FROM php:8.2-cli
+FROM dunglas/frankenphp:1-php8.2
 
-# Instalar dependencias del sistema y extensiones de PHP necesarias para MySQL
+# Instalar dependencias del sistema indispensables
 RUN apt-get update && apt-get install -y \
     git \
     curl \
-    libpng-dev \
-    libjpeg-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
     zip \
     unzip \
-    && docker-php-ext-configure gd --with-jpeg \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
-
-RUN docker-php-ext-install pdo_mysql mbstring
+    && install-php-extensions pdo_mysql mbstring exif pcntl bcmath gd zip
 
 # Traer Composer de forma directa
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -23,11 +15,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 
-# Instalar dependencias de Laravel sin las de desarrollo
+# Instalar dependencias de Laravel en limpio
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-# Dar permisos correctos a las carpetas de almacenamiento de Laravel
-RUN chmod -R 775 storage bootstrap/cache
+# Dar permisos correctos a las carpetas clave de Laravel
+RUN chmod -R 775 storage bootstrap/cache public
 
-# Comando de arranque usando el puerto dinámico de Railway
-CMD php artisan serve --host=0.0.0.0 --port=${PORT}
+# Indicarle a FrankenPHP que use la carpeta public como la raíz real de la web
+CMD ["frankenphp", "php-server", "--listen", ":$PORT", "--root", "public/"]
