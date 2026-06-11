@@ -25,6 +25,10 @@ Route::get('/about', function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+    // Rutas de Perfil
+    Route::put('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'updatePhoto'])->name('profile.photo');
+
     Route::resource('clientes', ClientesController::class);
     Route::get('clientes/{id}/view-pdf', [ClientesController::class, 'viewPdf'])->name('clientes.viewPdf');
     Route::get('clientes/{id}/export-pdf', [ClientesController::class, 'exportPdf'])->name('clientes.exportPdf');
