@@ -22,9 +22,6 @@ Homestead.yaml
 auth.json
 
 # Archivos generados por Laravel
-/public/storage
-/public/hot
-#/public/build
 /storage/*.key
 /storage/pail
 *.log
