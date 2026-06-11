@@ -59,56 +59,73 @@
     </div>
 
     <!-- Profile Modal -->
-    <div id="profileModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-slate-900/75 transition-opacity" aria-hidden="true" onclick="closeProfileModal()"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white dark:bg-slate-900 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-slate-200 dark:border-slate-800">
-                <div class="bg-white dark:bg-slate-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                            <h3 class="text-lg leading-6 font-semibold text-slate-900 dark:text-slate-100" id="modal-title">Mi Perfil</h3>
-                            <div class="mt-4">
-                                <form id="profileForm" enctype="multipart/form-data">
-                                    @csrf
-                                    @method('PUT')
-                                    <div class="flex flex-col items-center mb-6">
-                                        <div class="relative group">
-                                            @if(auth()->user() && auth()->user()->photo)
-                                                <img id="profilePhotoPreview" src="{{ asset('storage/' . auth()->user()->photo) }}" alt="Foto de perfil" class="w-24 h-24 rounded-full object-cover border-4 border-slate-100 dark:border-slate-800 shadow-sm">
-                                            @else
-                                                <div id="profilePhotoPreviewAlt" class="w-24 h-24 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-3xl font-bold border-4 border-slate-100 dark:border-slate-800 shadow-sm">
-                                                    {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
-                                                </div>
-                                            @endif
-                                            <label for="photoInput" class="absolute bottom-0 right-0 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 p-2 rounded-full shadow-md border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                                                <i class="fas fa-camera"></i>
-                                            </label>
-                                            <input type="file" id="photoInput" name="photo" class="hidden" accept="image/*" onchange="previewProfilePhoto(event)">
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="profileName" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nombre</label>
-                                        <input type="text" name="name" id="profileName" value="{{ auth()->user()->name ?? '' }}" class="w-full rounded-lg border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm px-4 py-2" required>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="profileEmail" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Correo Electrónico</label>
-                                        <input type="email" name="email" id="profileEmail" value="{{ auth()->user()->email ?? '' }}" class="w-full rounded-lg border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm px-4 py-2" required>
-                                    </div>
-                                    <div id="profileAlert" class="hidden rounded-lg p-3 text-sm mb-4"></div>
-                                </form>
+    <div id="profileModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display:none;" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" onclick="closeProfileModal()"></div>
+        <!-- Panel -->
+        <div class="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800">
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100" id="modal-title">Mi Perfil</h3>
+                <button onclick="closeProfileModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <i class="fas fa-times text-base"></i>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="px-6 py-5">
+                <form id="profileForm" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <!-- Avatar -->
+                    <div class="flex flex-col items-center mb-6">
+                        <div class="relative">
+                            @if(auth()->user() && auth()->user()->photo)
+                                <img id="profilePhotoPreview" src="{{ asset('storage/' . auth()->user()->photo) }}" alt="Foto de perfil" class="w-24 h-24 rounded-full object-cover ring-4 ring-slate-100 dark:ring-slate-800 shadow">
+                            @else
+                                <div id="profilePhotoPreviewAlt" class="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 text-white flex items-center justify-center text-3xl font-bold ring-4 ring-slate-100 dark:ring-slate-800 shadow">
+                                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+                                </div>
+                            @endif
+                            <label for="photoInput" class="absolute -bottom-1 -right-1 bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-full shadow-lg cursor-pointer transition-colors">
+                                <i class="fas fa-camera text-xs"></i>
+                            </label>
+                            <input type="file" id="photoInput" name="photo" class="hidden" accept="image/*" onchange="previewProfilePhoto(event)">
+                        </div>
+                        <p class="mt-3 text-xs text-slate-400 dark:text-slate-500">Haz clic en la cámara para cambiar tu foto</p>
+                    </div>
+                    <!-- Fields -->
+                    <div class="space-y-4">
+                        <div>
+                            <label for="profileName" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Nombre</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-user text-slate-400 text-sm"></i>
+                                </div>
+                                <input type="text" name="name" id="profileName" value="{{ auth()->user()->name ?? '' }}" class="block w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="profileEmail" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Correo Electrónico</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-envelope text-slate-400 text-sm"></i>
+                                </div>
+                                <input type="email" name="email" id="profileEmail" value="{{ auth()->user()->email ?? '' }}" class="block w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" required>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="bg-slate-50 dark:bg-slate-800/50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-slate-200 dark:border-slate-800">
-                    <button type="button" onclick="saveProfile()" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
-                        Guardar Cambios
-                    </button>
-                    <button type="button" onclick="closeProfileModal()" class="mt-3 w-full inline-flex justify-center rounded-xl border border-slate-300 dark:border-slate-600 shadow-sm px-4 py-2 bg-white dark:bg-slate-800 text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
-                        Cancelar
-                    </button>
-                </div>
+                    <!-- Alert -->
+                    <div id="profileAlert" class="hidden rounded-xl p-3 text-sm mt-4"></div>
+                </form>
+            </div>
+            <!-- Footer -->
+            <div class="flex items-center justify-end gap-3 px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800">
+                <button type="button" onclick="closeProfileModal()" class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                    Cancelar
+                </button>
+                <button type="button" onclick="saveProfile()" class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-sm transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <i class="fas fa-save mr-1.5"></i>Guardar Cambios
+                </button>
             </div>
         </div>
     </div>
@@ -156,11 +173,15 @@
         // Profile Modal Logic
         function openProfileModal() {
             document.getElementById('userDropdown').classList.add('hidden');
-            document.getElementById('profileModal').classList.remove('hidden');
+            const modal = document.getElementById('profileModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         }
 
         function closeProfileModal() {
-            document.getElementById('profileModal').classList.add('hidden');
+            const modal = document.getElementById('profileModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
             document.getElementById('profileAlert').classList.add('hidden');
         }
 
@@ -180,7 +201,7 @@
                         img.id = 'profilePhotoPreview';
                         img.src = e.target.result;
                         img.alt = 'Foto de perfil';
-                        img.className = 'w-24 h-24 rounded-full object-cover border-4 border-slate-100 dark:border-slate-800 shadow-sm';
+                        img.className = 'w-24 h-24 rounded-full object-cover ring-4 ring-slate-100 shadow';
                         altPreview.parentNode.replaceChild(img, altPreview);
                     }
                 }

@@ -7,9 +7,9 @@
 
     <div class="flex items-center gap-2 md:gap-4">
         <!-- Dark Mode Toggle -->
-        <button onclick="toggleDarkMode()" class="text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 focus:outline-none w-10 h-10 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-            <i class="fas fa-sun hidden dark:block text-lg"></i>
-            <i class="fas fa-moon block dark:hidden text-lg"></i>
+        <button id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar modo" class="relative w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1">
+            <i id="iconLight" class="fas fa-moon text-base"></i>
+            <i id="iconDark"  class="fas fa-sun  text-base hidden"></i>
         </button>
 
         <!-- User Dropdown -->
