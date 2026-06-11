@@ -1,37 +1,56 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light border-bottom">
-    <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#" role="button">
-                <i class="fas fa-bars fa-lg" style="color: #2563EB;"></i>
-            </a>
-        </li>
-    </ul>
-    <ul class="navbar-nav ml-auto">
+<header class="h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 z-30 transition-colors duration-200">
+    <div class="flex items-center gap-4">
+        <button onclick="toggleSidebar()" class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 focus:outline-none md:hidden">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <!-- Dark Mode Toggle -->
+        <button onclick="toggleDarkMode()" class="text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 focus:outline-none w-10 h-10 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <i class="fas fa-sun hidden dark:block text-lg"></i>
+            <i class="fas fa-moon block dark:hidden text-lg"></i>
+        </button>
+
+        <!-- User Dropdown -->
         @auth
-        <div class="user-panel mt-2 pb-3 d-flex align-items-center mr-3">
-            <div class="image mr-3">
-                @php
-                    $userPhotoPath = 'uploads/users/' . Auth::user()->photo;
-                @endphp
-                @if (!empty(Auth::user()->photo) && file_exists(public_path($userPhotoPath)))
-                    <img class="img-circle elevation-1" src="{{ asset($userPhotoPath) }}" alt="{{ Auth::user()->name }}" style="width: 40px; height: 40px;">
+        <div class="relative">
+            <button id="userMenuBtn" onclick="toggleUserDropdown()" class="flex items-center gap-2 focus:outline-none hover:bg-slate-50 dark:hover:bg-slate-800 p-1 rounded-full md:rounded-xl transition-colors">
+                @if(auth()->user()->photo)
+                    <img src="{{ asset('storage/' . auth()->user()->photo) }}" alt="Perfil" class="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-slate-700">
                 @else
-                    <img src="{{ asset('backend/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-1" alt="" style="width: 40px; height: 40px;">
+                    <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm border border-indigo-200 dark:border-indigo-800">
+                        {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
+                    </div>
                 @endif
-            </div>
-            <div class="info" style="color: #475569; font-size: 0.9rem;">
-                <strong>{{ Auth::user()->name }}</strong>
+                <span class="hidden md:block text-sm font-medium text-slate-700 dark:text-slate-300 mr-1">
+                    {{ auth()->user()->name }}
+                </span>
+                <i class="fas fa-chevron-down text-xs text-slate-400 hidden md:block"></i>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 py-1 z-50 overflow-hidden origin-top-right">
+                <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800 md:hidden">
+                    <p class="text-sm font-medium text-slate-900 dark:text-white truncate">{{ auth()->user()->name }}</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 truncate">{{ auth()->user()->email }}</p>
+                </div>
+                
+                <button onclick="openProfileModal()" class="w-full text-left px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex items-center gap-2">
+                    <i class="fas fa-user-circle text-slate-400 w-4 text-center"></i> Mi Perfil
+                </button>
+                
+                <div class="h-px bg-slate-100 dark:bg-slate-800 my-1"></div>
+                
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="w-full text-left px-4 py-2.5 text-sm text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors flex items-center gap-2">
+                    <i class="fas fa-sign-out-alt text-rose-500 dark:text-rose-400 w-4 text-center"></i> Cerrar Sesión
+                </a>
+                
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                    @csrf
+                </form>
             </div>
         </div>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();" title="Cerrar Sesión" role="button">
-                <i class='fas fa-sign-out-alt fa-lg' style='color: #EF4444'></i>
-            </a>
-            <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none">
-                @csrf
-            </form>
-        </li>
         @endauth
-    </ul>
-</nav>
-
+    </div>
+</header>

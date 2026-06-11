@@ -1,15 +1,10 @@
-<footer class="main-footer" style="background-color: white; border-top: 1px solid #E2E8F0; padding: 1.5rem 0; color: #64748B;">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-6">
-                <p style="margin: 0; font-weight: 500;">© 2024 - Todos los derechos reservados.</p>
-            </div>
-            <div class="col-sm-6 text-right">
-                <p style="margin: 0; font-weight: 500;"><strong>Versión</strong> 1.0.0</p>
-            </div>
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-4 px-6 text-sm text-slate-500 dark:text-slate-400 mt-auto transition-colors duration-200">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-2">
+        <div>
+            &copy; {{ date('Y') }} Gestor de Tickets. Todos los derechos reservados.
+        </div>
+        <div>
+            Diseñado con <i class="fas fa-heart text-rose-500 mx-1"></i> por tu equipo
         </div>
     </div>
 </footer>
-  
-<aside class="control-sidebar control-sidebar-dark">
-</aside>

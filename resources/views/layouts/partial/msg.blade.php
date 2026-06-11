@@ -1,21 +1,41 @@
 @if ($errors->any())
     @foreach ($errors->all() as $error)
-        <div class="alert alert-danger" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #dc2626; border-radius: 0.5rem; padding: 1rem 1.25rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-            <span style="display: flex; align-items: center;">
-                <i class="fas fa-exclamation-circle mr-2"></i>
-                <strong style="margin-right: 0.5rem;">Advertencia -</strong> {{ $error }}
-            </span>
-            <button type="button" aria-hidden="true" class="close" onclick="this.parentElement.style.display='none'" style="color: #dc2626; opacity: 0.7; font-size: 1.5rem; border: none; background: none; cursor: pointer;">×</button>
+        <div class="mb-4 bg-rose-50 dark:bg-rose-900/20 border-l-4 border-rose-500 rounded-r-xl p-4 flex justify-between items-start">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-circle text-rose-500 dark:text-rose-400 text-lg mt-0.5"></i>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-rose-800 dark:text-rose-300">Hubo un problema</h3>
+                    <div class="mt-1 text-sm text-rose-700 dark:text-rose-400">
+                        <p>{{ $error }}</p>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="this.parentElement.style.display='none'" class="text-rose-500 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 focus:outline-none transition-colors">
+                <span class="sr-only">Cerrar</span>
+                <i class="fas fa-times text-lg"></i>
+            </button>
         </div>
     @endforeach
 @endif
 
 @if(session('successMsg'))
-    <div class="alert alert-success" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #059669; border-radius: 0.5rem; padding: 1rem 1.25rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-        <span style="display: flex; align-items: center;">
-            <i class="fas fa-check-circle mr-2"></i>
-            <strong style="margin-right: 0.5rem;">Éxito -</strong> {{ session('successMsg') }}
-        </span>
-        <button type="button" aria-hidden="true" class="close" onclick="this.parentElement.style.display='none'" style="color: #059669; opacity: 0.7; font-size: 1.5rem; border: none; background: none; cursor: pointer;">×</button>
+    <div class="mb-4 bg-emerald-50 dark:bg-emerald-900/20 border-l-4 border-emerald-500 rounded-r-xl p-4 flex justify-between items-start">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <i class="fas fa-check-circle text-emerald-500 dark:text-emerald-400 text-lg mt-0.5"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-emerald-800 dark:text-emerald-300">¡Éxito!</h3>
+                <div class="mt-1 text-sm text-emerald-700 dark:text-emerald-400">
+                    <p>{{ session('successMsg') }}</p>
+                </div>
+            </div>
+        </div>
+        <button type="button" onclick="this.parentElement.style.display='none'" class="text-emerald-500 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 focus:outline-none transition-colors">
+            <span class="sr-only">Cerrar</span>
+            <i class="fas fa-times text-lg"></i>
+        </button>
     </div>
 @endif
