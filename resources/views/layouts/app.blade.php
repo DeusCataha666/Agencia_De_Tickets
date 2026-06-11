@@ -193,14 +193,11 @@
             const formData = new FormData(form);
             const alertBox = document.getElementById('profileAlert');
 
-            // Determine if we're uploading a photo or just updating text
-            const hasPhoto = document.getElementById('photoInput').files.length > 0;
-            const url = hasPhoto ? '{{ route("profile.photo") }}' : '{{ route("profile.update") }}';
-            
-            if (hasPhoto) {
-                // If uploading photo, we need POST with method spoofing
-                formData.set('_method', 'POST'); 
-            }
+            // If uploading photo, we need POST with method spoofing
+            // The form already has @method('PUT') so _method is already in formData.
+            // When sending files via AJAX to a PUT route in Laravel, you must send as POST 
+            // and let the _method=PUT spoof it.
+            const url = '{{ route("profile.update") }}';
 
             $.ajax({
                 url: url,

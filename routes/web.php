@@ -27,7 +27,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Rutas de Perfil
     Route::put('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
-    Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'updatePhoto'])->name('profile.photo');
+
 
     Route::resource('clientes', ClientesController::class);
     Route::get('clientes/{id}/view-pdf', [ClientesController::class, 'viewPdf'])->name('clientes.viewPdf');
