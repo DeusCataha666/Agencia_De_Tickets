@@ -70,16 +70,31 @@ class TipoUsuariosController extends Controller
      */
     public function destroy(string $id)
     {
+        $tipoUsuario = TipoUsuario::withCount('usuarios')->findOrFail($id);
+
         try {
-            $tipoUsuario = TipoUsuario::findOrFail($id);
             $tipoUsuario->delete();
-            return redirect()->route('tipousuarios.index')->with('successMsg', 'El tipo de usuario se eliminó exitosamente');
+            return redirect()
+                ->route('tipousuarios.index')
+                ->with('successMsg', 'El tipo de usuario se eliminó exitosamente.');
+
         } catch (QueryException $e) {
-            Log::error('Error al eliminar el tipo de usuario: ' . $e->getMessage());
-            return redirect()->route('tipousuarios.index')->withErrors('El tipo de usuario que desea eliminar tiene información relacionada. Comuníquese con el Administrador');
+            Log::error('Error al eliminar tipo de usuario #' . $id . ': ' . $e->getMessage());
+
+            $cantidad = $tipoUsuario->usuarios_count;
+            $msg = "No se puede eliminar el tipo \"{$tipoUsuario->nombre_tipo}\" porque tiene "
+                 . "{$cantidad} usuario(s) asignado(s). "
+                 . "Reasigna o elimina esos usuarios primero.";
+
+            return redirect()
+                ->route('tipousuarios.index')
+                ->withErrors($msg);
+
         } catch (Exception $e) {
-            Log::error('Error inesperado al eliminar el tipo de usuario: ' . $e->getMessage());
-            return redirect()->route('tipousuarios.index')->withErrors('Ocurrió un error inesperado al eliminar el tipo de usuario. Comuníquese con el Administrador');
+            Log::error('Error inesperado al eliminar tipo de usuario #' . $id . ': ' . $e->getMessage());
+            return redirect()
+                ->route('tipousuarios.index')
+                ->withErrors('Ocurrió un error inesperado. Intenta nuevamente.');
         }
     }
 

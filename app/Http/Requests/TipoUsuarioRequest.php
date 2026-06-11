@@ -13,17 +13,21 @@ class TipoUsuarioRequest extends FormRequest
 
     public function rules(): array
     {
-        if (request()->isMethod('post')) {
+        $id = $this->route('tipousuario');
+
+        if ($this->isMethod('post')) {
             return [
                 'nombre_tipo'    => 'required|string|max:255|unique:tipo_usuarios,nombre_tipo',
                 'estado'         => 'nullable|boolean',
-                'registrado_por' => 'nullable|integer',
+                'registrado_por' => 'nullable',
             ];
-        } elseif (request()->isMethod('put')) {
+        }
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
             return [
-                'nombre_tipo'    => 'required|string|max:255|unique:tipo_usuarios,nombre_tipo,' . $this->route('tipousuario'),
+                'nombre_tipo'    => 'required|string|max:255|unique:tipo_usuarios,nombre_tipo,' . $id,
                 'estado'         => 'nullable|boolean',
-                'registrado_por' => 'nullable|integer',
+                'registrado_por' => 'nullable',
             ];
         }
 

@@ -30,6 +30,12 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        // Dejar que Laravel maneje las excepciones de validación normalmente
+        // (redirige de vuelta con los errores en sesión)
+        if ($exception instanceof \Illuminate\Validation\ValidationException) {
+            return parent::render($request, $exception);
+        }
+
         if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
             return (new NotFoundHttpException())->render($request);
         }
