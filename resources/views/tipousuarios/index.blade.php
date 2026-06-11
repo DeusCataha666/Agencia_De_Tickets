@@ -45,13 +45,27 @@
                                 <a href="{{ route('tipousuarios.edit', $tipoUsuario) }}" class="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 flex items-center justify-center hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors" title="Editar">
                                     <i class="fas fa-pencil-alt text-sm"></i>
                                 </a>
-                                <form action="{{ route('tipousuarios.destroy', $tipoUsuario) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de eliminar este tipo de usuario?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 flex items-center justify-center hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors" title="Eliminar">
+
+                                @if($tipoUsuario->estado)
+                                    {{-- Activo: botón deshabilitado con tooltip --}}
+                                    <button type="button" disabled
+                                            title="Desactiva el tipo primero para poder eliminarlo"
+                                            class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-300 dark:text-slate-600 flex items-center justify-center cursor-not-allowed">
                                         <i class="fas fa-trash-alt text-sm"></i>
                                     </button>
-                                </form>
+                                @else
+                                    {{-- Inactivo: eliminar disponible --}}
+                                    <form action="{{ route('tipousuarios.destroy', $tipoUsuario) }}" method="POST" class="inline"
+                                          onsubmit="return confirm('¿Eliminar el tipo \"{{ $tipoUsuario->nombre_tipo }}\"? Sus usuarios serán desvinculados y eliminados.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 flex items-center justify-center hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors"
+                                                title="Eliminar">
+                                            <i class="fas fa-trash-alt text-sm"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

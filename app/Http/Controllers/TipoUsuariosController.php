@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Database\QueryException;
 use Exception;
 use App\Models\TipoUsuario;
 use App\Http\Requests\TipoUsuarioRequest;
@@ -67,34 +66,53 @@ class TipoUsuariosController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * Si el tipo está INACTIVO: desasigna los tickets de sus usuarios,
+     * luego elimina los usuarios (cascade elimina comentarios) y por último
+     * elimina el tipo — todo en una transacción.
+     *
+     * Si el tipo está ACTIVO: bloquea con mensaje claro.
      */
     public function destroy(string $id)
     {
         $tipoUsuario = TipoUsuario::withCount('usuarios')->findOrFail($id);
 
+        // Tipo activo → no permitir
+        if ($tipoUsuario->estado) {
+            return redirect()
+                ->route('tipousuarios.index')
+                ->withErrors("No se puede eliminar el tipo \"{$tipoUsuario->nombre_tipo}\" porque está activo. Desactívalo primero.");
+        }
+
+        // Tipo inactivo → eliminar en cascada de forma controlada
         try {
-            $tipoUsuario->delete();
+            \DB::transaction(function () use ($tipoUsuario) {
+
+                // 1. Desasignar tickets que apuntan a usuarios de este tipo
+                $usuarioIds = $tipoUsuario->usuarios()->pluck('id');
+
+                if ($usuarioIds->isNotEmpty()) {
+                    \DB::table('tickets')
+                        ->whereIn('usuario_asignado_id', $usuarioIds)
+                        ->update(['usuario_asignado_id' => null]);
+
+                    // 2. Eliminar usuarios (cascade borra sus comentarios)
+                    $tipoUsuario->usuarios()->delete();
+                }
+
+                // 3. Eliminar el tipo
+                $tipoUsuario->delete();
+            });
+
             return redirect()
                 ->route('tipousuarios.index')
-                ->with('successMsg', 'El tipo de usuario se eliminó exitosamente.');
-
-        } catch (QueryException $e) {
-            Log::error('Error al eliminar tipo de usuario #' . $id . ': ' . $e->getMessage());
-
-            $cantidad = $tipoUsuario->usuarios_count;
-            $msg = "No se puede eliminar el tipo \"{$tipoUsuario->nombre_tipo}\" porque tiene "
-                 . "{$cantidad} usuario(s) asignado(s). "
-                 . "Reasigna o elimina esos usuarios primero.";
-
-            return redirect()
-                ->route('tipousuarios.index')
-                ->withErrors($msg);
+                ->with('successMsg', "El tipo \"{$tipoUsuario->nombre_tipo}\" y sus usuarios asociados fueron eliminados correctamente.");
 
         } catch (Exception $e) {
-            Log::error('Error inesperado al eliminar tipo de usuario #' . $id . ': ' . $e->getMessage());
+            Log::error('Error al eliminar tipo de usuario #' . $tipoUsuario->id . ': ' . $e->getMessage());
             return redirect()
                 ->route('tipousuarios.index')
-                ->withErrors('Ocurrió un error inesperado. Intenta nuevamente.');
+                ->withErrors('Ocurrió un error inesperado al intentar eliminar. Intenta nuevamente.');
         }
     }
 
