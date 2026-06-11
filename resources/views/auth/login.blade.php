@@ -7,8 +7,8 @@
     <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden">
         
         <div class="px-8 pt-10 pb-6 text-center">
-            <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 mb-6">
-                <i class="fas fa-ticket-alt text-4xl text-indigo-600 dark:text-indigo-400"></i>
+            <div class="flex items-center justify-center mb-6">
+                <img src="{{ asset('backend/dist/img/BCC.png') }}" alt="BCC Logo" class="h-16 w-auto max-w-[180px] object-contain">
             </div>
             <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">{{ __('Iniciar Sesión') }}</h1>
             <p class="text-slate-500 dark:text-slate-400">{{ __('Ingresa a tu cuenta para continuar') }}</p>

@@ -7,8 +7,8 @@
     <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden text-center">
         
         <div class="px-8 pt-10 pb-6">
-            <div class="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-indigo-50 dark:bg-indigo-900/20 mb-8">
-                <i class="fas fa-ticket-alt text-5xl text-indigo-600 dark:text-indigo-400"></i>
+            <div class="flex items-center justify-center mb-8">
+                <img src="{{ asset('backend/dist/img/BCC.png') }}" alt="BCC Logo" class="h-20 w-auto max-w-[220px] object-contain">
             </div>
             <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-3">{{ __('Agencia de Tickets') }}</h1>
             
