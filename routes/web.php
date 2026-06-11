@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     // Rutas de Perfil
+    Route::get('/profile/photo', [App\Http\Controllers\ProfileController::class, 'photo'])->name('profile.photo');
     Route::put('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 
 

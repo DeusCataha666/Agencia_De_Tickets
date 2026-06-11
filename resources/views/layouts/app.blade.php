@@ -105,7 +105,7 @@
                         <div class="relative">
                             @if(auth()->user() && auth()->user()->photo)
                                 <img id="profilePhotoPreview"
-                                     src="{{ Storage::url(auth()->user()->photo) }}?v={{ auth()->user()->updated_at->timestamp }}"
+                                     src="{{ route('profile.photo') }}?v={{ auth()->user()->updated_at->timestamp }}"
                                      alt="Foto de perfil"
                                      class="w-24 h-24 rounded-full object-cover ring-4 ring-slate-100 dark:ring-slate-800 shadow"
                                      onerror="this.style.display='none'; document.getElementById('profilePhotoPreviewAlt').style.display='flex';">

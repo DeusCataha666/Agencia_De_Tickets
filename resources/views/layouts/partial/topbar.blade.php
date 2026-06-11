@@ -15,7 +15,7 @@
                     class="flex items-center gap-2 focus:outline-none hover:bg-slate-50 dark:hover:bg-slate-800 p-1 pr-2 rounded-xl transition-colors">
                 {{-- Avatar --}}
                 @if(auth()->user()->photo)
-                    <img src="{{ Storage::url(auth()->user()->photo) }}?v={{ auth()->user()->updated_at->timestamp }}"
+                    <img src="{{ route('profile.photo') }}?v={{ auth()->user()->updated_at->timestamp }}"
                          alt="Perfil"
                          class="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-slate-700"
                          onerror="this.style.display='none'; document.getElementById('topbarInitial').style.display='flex';">
