@@ -1,0 +1,27 @@
+/node_modules
+/vendor
+/.phpunit.cache
+.phpunit.result.cache
+
+# Variables de entorno (¡Muy importante que se queden ignoradas!)
+.env
+.env.backup
+.env.production
+.env.testing
+
+# Archivos del sistema y de editores de código
+Thumbs.db
+.DS_Store
+/.idea
+/.vscode
+/.fleet
+/.nova
+/.zed
+Homestead.json
+Homestead.yaml
+auth.json
+
+# Archivos generados por Laravel
+/storage/*.key
+/storage/pail
+*.log
